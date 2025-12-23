@@ -1,0 +1,511 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>中式养生健康App_交互版</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .app-screen { width: 375px; height: 812px; position: relative; overflow: hidden; background-color: #FDFCF9; }
+    .page-content { height: 676px; overflow-y: auto; }
+    .nav-active { color: #5F8D4E; font-weight: bold; }
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen py-10">
+<div class="app-screen border border-gray-200 rounded-[40px] shadow-2xl overflow-hidden flex flex-col bg-white">
+<!-- 状态栏 -->
+<div class="h-[44px] flex items-center justify-between px-8 bg-white shrink-0">
+<span class="text-sm font-semibold">12:00</span>
+<div class="flex gap-1.5 grayscale opacity-70">
+<span class="iconify" data-icon="material-symbols:signal-cellular-4-bar-rounded"></span>
+<span class="iconify" data-icon="material-symbols:wifi-rounded"></span>
+<span class="iconify" data-icon="material-symbols:battery-5-bar-rounded"></span>
+</div>
+</div>
+<!-- 顶栏 (动态渲染标题) -->
+<div class="h-[56px] border-b border-gray-50 flex items-center justify-between px-6 bg-white shrink-0">
+<div class="w-8"></div>
+<h1 class="text-lg font-bold text-gray-800" id="page-title">首页</h1>
+<div class="w-8 flex justify-end">
+<span class="iconify text-xl text-gray-400 cursor-pointer" data-icon="solar:settings-linear" id="header-icon"></span>
+</div>
+</div>
+<!-- 页面内容主容器 -->
+<main class="page-content hide-scrollbar px-5 py-4 bg-[#FDFCF9]" id="main-container">
+<!-- 动态插入页面 -->
+</main>
+<!-- 底部导航栏 -->
+<nav class="h-[80px] border-t border-gray-100 flex items-center justify-around bg-white shrink-0 pb-4">
+<button class="nav-btn flex flex-col items-center gap-1 text-gray-400 transition-colors" data-page="home" onclick="switchPage('home')">
+<span class="iconify text-2xl" data-icon="solar:home-smile-angle-linear"></span>
+<span class="text-[11px]">首页</span>
+</button>
+<button class="nav-btn flex flex-col items-center gap-1 text-gray-400" data-page="community" onclick="switchPage('community')">
+<span class="iconify text-2xl" data-icon="solar:users-group-two-rounded-linear"></span>
+<span class="text-[11px]">社区</span>
+</button>
+<button class="nav-btn flex flex-col items-center gap-1 text-gray-400" data-page="record" onclick="switchPage('record')">
+<span class="iconify text-2xl" data-icon="solar:calendar-minimalistic-linear"></span>
+<span class="text-[11px]">记录</span>
+</button>
+<button class="nav-btn flex flex-col items-center gap-1 text-gray-400" data-page="mall" onclick="switchPage('mall')">
+<span class="iconify text-2xl" data-icon="solar:bag-linear"></span>
+<span class="text-[11px]">商城</span>
+</button>
+<button class="nav-btn flex flex-col items-center gap-1 text-gray-400" data-page="me" onclick="switchPage('me')">
+<span class="iconify text-2xl" data-icon="solar:user-circle-linear"></span>
+<span class="text-[11px]">我的</span>
+</button>
+</nav>
+</div>
+<script>
+    const pages = {
+      home: `
+        <div class="space-y-6 animate-in fade-in duration-300">
+          <div class="mt-2">
+            <h2 class="text-2xl text-[#9C4A1A] font-bold">今天你有</h2>
+            <p class="text-xl text-gray-800 font-medium">好好养生吗？</p>
+          </div>
+          <div class="bg-gradient-to-br from-[#9C4A1A] to-[#C06C42] rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
+            <p class="italic text-sm opacity-90 mb-4 font-light">“养生可是件大事”</p>
+            <div class="flex justify-between items-center relative z-10">
+              <button class="bg-white/20 hover:bg-white/30 px-6 py-2 rounded-full text-xs transition-colors">坚持打卡</button>
+              <span class="text-xs opacity-90 flex items-center gap-1">查看攻略 <span class="iconify" data-icon="iconamoon:arrow-right-2-light"></span></span>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-1.5 h-4 bg-[#6B8E23] rounded-full"></div>
+              <h3 class="text-lg font-bold text-gray-800">快速自测</h3>
+            </div>
+           <div class="grid grid-cols-3 gap-3">
+  <!-- 皮肤状态（可点击） -->
+<div
+  onclick="startSkinTest()"
+  class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm
+         flex flex-col items-center gap-2
+         cursor-pointer
+         active:scale-95 transition-transform"
+>
+  <span
+    class="iconify text-3xl text-emerald-400"
+    data-icon="solar:clipboard-check-linear">
+  </span>
+
+  <span class="text-xs text-gray-600">
+    皮肤自测
+  </span>
+</div>
+
+  <!-- 失眠 -->
+  <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm
+              flex flex-col items-center gap-2">
+    <span class="iconify text-3xl text-indigo-400" data-icon="solar:moon-sleep-linear"></span>
+    <span class="text-xs text-gray-600">失眠</span>
+  </div>
+
+  <!-- 上火 -->
+  <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm
+              flex flex-col items-center gap-2">
+    <span class="iconify text-3xl text-orange-400" data-icon="solar:fire-linear"></span>
+    <span class="text-xs text-gray-600">上火</span>
+  </div>
+
+  <!-- 腹泻 -->
+  <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm
+              flex flex-col items-center gap-2">
+    <span class="iconify text-3xl text-blue-400" data-icon="solar:water-linear"></span>
+    <span class="text-xs text-gray-600">腹泻</span>
+  </div>
+
+  <!-- 积食 -->
+  <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm
+              flex flex-col items-center gap-2">
+    <span class="iconify text-3xl text-amber-500" data-icon="solar:tea-cup-linear"></span>
+    <span class="text-xs text-gray-600">积食</span>
+  </div>
+
+  <!-- 腰酸背痛 -->
+  <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm
+              flex flex-col items-center gap-2">
+    <span class="iconify text-3xl text-emerald-400" data-icon="solar:bone-broken-linear"></span>
+    <span class="text-xs text-gray-600">腰酸背痛</span>
+  </div>
+</div>
+<br>
+          <div class="bg-[#F4F1EA] rounded-2xl p-5 flex justify-between items-center border border-[#E0D8CC]">
+            <div class="space-y-1">
+              <span class="text-[10px] font-bold text-[#9C4A1A] border border-[#9C4A1A] px-2 py-0.5 rounded cursor-default">节气养生</span>
+              <h4 class="text-gray-800 font-bold">冬至：温补暖身</h4>
+              <p class="text-xs text-gray-500">2025年12月21日 - 1月4日</p>
+            </div>
+            <img id="1" src="https://p0.meituan.net/biztone/f0e299688d347ab6cc7f59f84715d87b929792.png%40watermark%3D0" alt="Winter Solstice" class="w-20 h-20 rounded-lg object-cover">
+          </div>
+        </div>
+      `,
+      community: `
+        <div class="space-y-6">
+          <div class="relative">
+            <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" data-icon="solar:magnifer-linear"></span>
+            <input type="text" placeholder="搜索养生经验..." class="w-full bg-gray-100 border-none rounded-full py-3 pl-12 pr-4 text-sm outline-none focus:ring-1 ring-[#9C4A1A]/30">
+          </div>
+          <div class="flex gap-3 overflow-x-auto hide-scrollbar -mx-2 px-2">
+            <span class="shrink-0 px-5 py-2 rounded-full bg-[#9C4A1A] text-white text-xs">关注</span>
+            <span class="shrink-0 px-5 py-2 rounded-full bg-gray-100 text-gray-500 text-xs">热门</span>
+            <span class="shrink-0 px-5 py-2 rounded-full bg-gray-100 text-gray-500 text-xs text-nowrap">皮肤护理</span>
+            <span class="shrink-0 px-5 py-2 rounded-full bg-gray-100 text-gray-500 text-xs text-nowrap">体态舒缓</span>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+             <div class="bg-white p-3 rounded-2xl border border-gray-100 text-center space-y-2 shadow-sm">
+                <span class="iconify text-2xl text-orange-400 mx-auto" data-icon="solar:camera-linear"></span>
+                <span class="text-[10px] text-gray-700 block">晒经验</span>
+             </div>
+             <div class="bg-white p-3 rounded-2xl border border-gray-100 text-center space-y-2 shadow-sm">
+                <span class="iconify text-2xl text-blue-400 mx-auto" data-icon="solar:document-text-linear"></span>
+                <span class="text-[10px] text-gray-700 block">抄作业</span>
+             </div>
+             <div class="bg-white p-3 rounded-2xl border border-gray-100 text-center space-y-2 shadow-sm">
+                <span class="iconify text-2xl text-green-400 mx-auto" data-icon="solar:users-group-rounded-linear"></span>
+                <span class="text-[10px] text-gray-700 block">找搭子</span>
+             </div>
+          </div>
+          <div class="space-y-4">
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-50">
+              <img id="2" src="https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?auto=format&fit=crop&q=80&w=400" alt="Skin Care post" class="w-full h-40 object-cover">
+              <div class="p-4 space-y-3">
+                <span class="inline-block bg-red-50 text-red-500 text-[10px] px-2 py-0.5 rounded font-bold">纯净无广</span>
+                <div class="flex gap-2 items-start">
+                  <h4 class="font-bold text-gray-800 leading-snug flex-1">20岁女大 我用的这方法1周祛痘</h4>
+                  
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <img id="3" src="https://api.dicebear.com/7.x/adventurer/svg?seed=YueYue" alt="YueYue avatar" class="w-6 h-6 rounded-full bg-pink-100">
+                    <span class="text-xs text-gray-500">悦悦</span>
+                  </div>
+                  <div class="flex items-center gap-1 text-gray-400 text-xs">
+                    <span class="iconify" data-icon="solar:heart-linear"></span>
+                    <span>1.2k</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-50 space-y-3">
+<img id="9" src="https://miaobi-lite.bj.bcebos.com/miaobi/5mao/b%27LV8xNzMyOTM4NTA4LjY3MzI4NzY%3D%27/0.png" alt="Skin Care post" class="w-full h-40 object-cover">
+              <span class="inline-block bg-blue-50 text-blue-500 text-[10px] px-2 py-0.5 rounded font-bold">10min课间运动</span>
+              <h4 class="font-bold text-gray-800">我的屁股好像死掉了？复活臀大肌</h4>
+              <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <img id="4" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Azheng" alt="Azheng avatar" class="w-6 h-6 rounded-full bg-blue-100">
+                    <span class="text-xs text-gray-500">阿正</span>
+                  </div>
+                  <div class="flex items-center gap-1 text-gray-400 text-xs">
+                    <span class="iconify" data-icon="solar:heart-linear"></span>
+                    <span>856</span>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      `,
+      record: `
+        <div class="space-y-6">
+          <div class="grid grid-cols-3 gap-2">
+            <div class="bg-[#F4F1EA] rounded-2xl p-4 text-center">
+              <p class="text-[10px] text-gray-500 mb-1">连续打卡</p>
+              <p class="text-xl font-bold text-[#9C4A1A]">31</p>
+            </div>
+            <div class="bg-white border border-gray-100 rounded-2xl p-4 text-center">
+              <p class="text-[10px] text-gray-500 mb-1">累计打卡</p>
+              <p class="text-xl font-bold text-gray-800">365</p>
+            </div>
+            <div class="bg-white border border-gray-100 rounded-2xl p-4 text-center">
+              <p class="text-[10px] text-gray-500 mb-1">本月打卡</p>
+              <p class="text-xl font-bold text-gray-800">31</p>
+            </div>
+          </div>
+          <div class="bg-green-50 rounded-2xl p-4 text-center border border-green-100">
+            <p class="text-green-700 text-sm">“太棒啦！今日养生事项已经全部完成啦！”</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-50">
+            <div class="flex justify-between items-center mb-6">
+              <h4 class="font-bold text-gray-800">2025年12月</h4>
+              <span class="iconify text-gray-400" data-icon="solar:alt-arrow-right-linear"></span>
+            </div>
+            <div class="grid grid-cols-7 text-center gap-y-4">
+              ${['一','二','三','四','五','六','日'].map(d => `<span class="text-[10px] text-gray-400 font-medium">${d}</span>`).join('')}
+              <span class="text-sm text-gray-200">24</span>
+              <span class="text-sm text-gray-200">25</span>
+              <span class="text-sm text-gray-200">26</span>
+              <span class="text-sm text-gray-200">27</span>
+              <span class="text-sm text-gray-200">28</span>
+              <span class="text-sm text-gray-200">29</span>
+              <span class="text-sm text-gray-200">30</span>
+              
+              ${Array.from({length: 21}, (_, i) => `<div class="relative flex justify-center"><span class="text-sm text-gray-800 relative z-10">${i+1}</span><div class="absolute -bottom-1 w-1 h-1 bg-[#6B8E23] rounded-full"></div></div>`).join('')}
+              <div class="relative flex justify-center"><span class="text-sm text-white font-bold bg-[#9C4A1A] w-6 h-6 flex items-center justify-center rounded-full">22</span></div>
+              ${Array.from({length: 9}, (_, i) => `<span class="text-sm text-gray-400">${i+23}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `,
+      mall: `
+        	<div class="space-y-6">
+          <div class="relative">
+            <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" data-icon="solar:magnifer-linear"></span>
+            <input type="text" placeholder="搜索养生好物..." class="w-full bg-gray-100 border-none rounded-full py-3 pl-12 pr-4 text-sm outline-none focus:ring-1 ring-[#9C4A1A]/30">
+          </div>
+          <div class="bg-gradient-to-r from-orange-400 to-pink-500 rounded-2xl p-5 text-white shadow-md">
+            <h4 class="text-lg font-bold">新人首单礼</h4>
+            <p class="text-xs opacity-90 mb-4">领100元券包</p>
+            <button class="bg-white text-orange-500 text-[10px] font-bold px-4 py-2 rounded-full shadow-sm">立即领取</button>
+          </div>
+          <div class="grid grid-cols-4 gap-4 px-2">
+            <div class="flex flex-col items-center gap-2">
+              <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center">
+                <span class="iconify text-2xl text-orange-500" data-icon="solar:chart-square-linear"></span>
+              </div>
+              <span class="text-[10px] text-gray-600">身体数据</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
+                <span class="iconify text-2xl text-green-500" data-icon="solar:leaf-linear"></span>
+              </div>
+              <span class="text-[10px] text-gray-600">健康食品</span>
+            </div>
+             <div class="flex flex-col items-center gap-2">
+              <div class="w-12 h-12 bg-indigo-50 rounded-full flex items-center justify-center">
+                <span class="iconify text-2xl text-indigo-500" data-icon="solar:tea-cup-bold-duotone"></span>
+              </div>
+              <span class="text-[10px] text-gray-600">休闲解压</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                <span class="iconify text-2xl text-gray-400" data-icon="solar:menu-dots-square-linear"></span>
+              </div>
+              <span class="text-[10px] text-gray-600">全部</span>
+            </div>
+          </div>
+          <div>
+            <h5 class="font-bold text-gray-800 mb-4 px-1">热门推荐</h5>
+            <div class="grid grid-cols-2 gap-4">
+               <div class="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
+                  <img id="5" src="https://img30.360buyimg.com/popWareDetail/jfs/t1/152366/22/11518/140514/5fe5a3b8Ea25376a2/10ff231adae2a9bd.jpg" alt="Product" class="w-full h-32 object-cover">
+                  <div class="p-3">
+                    <p class="text-xs font-medium text-gray-700 truncate">本草古法熬制即食膏</p>
+                    <p class="text-sm font-bold text-[#5F8D4E] mt-1">¥128</p>
+                  </div>
+               </div>
+               <div class="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
+                  <img id="6" src="https://t15.baidu.com/it/u=2689181837,3315132027&fm=224&app=112&f=JPEG?w=500&h=500" alt="Product" class="w-full h-32 object-cover">
+                  <div class="p-3">
+                    <p class="text-xs font-medium text-gray-700 truncate">九蒸九晒芝麻丸礼盒</p>
+                    <p class="text-sm font-bold text-[#5F8D4E] mt-1">¥88</p>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      `,
+      me: `
+        <div class="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+          <div class="flex items-center gap-4 py-4">
+            <div class="w-16 h-16 rounded-full bg-[#F4F1EA] border-4 border-white shadow-sm flex items-center justify-center overflow-hidden">
+               <span class="iconify text-3xl text-gray-300" data-icon="solar:user-bold"></span>
+            </div>
+            <div>
+              <h4 class="font-bold text-lg text-gray-800">用户15435597234</h4>
+              <p class="text-xs text-gray-400">ID: qingyang_7234</p>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex justify-between items-center">
+            <div>
+              <p class="text-2xl font-bold text-red-500">1222</p>
+              <p class="text-xs text-gray-500">我的积分</p>
+            </div>
+            <button class="bg-gray-100 text-gray-600 px-6 py-2 rounded-full text-xs font-medium active:bg-gray-200">签到</button>
+          </div>
+
+          <div class="space-y-2">
+            <div class="bg-white p-4 rounded-xl border border-gray-100 flex justify-between items-center active:bg-gray-50">
+              <span class="text-sm text-gray-700">收藏方案</span>
+              <span class="iconify text-gray-300" data-icon="solar:alt-arrow-right-linear"></span>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-gray-100 flex justify-between items-center active:bg-gray-50">
+              <span class="text-sm text-gray-700">使用效果</span>
+              <span class="iconify text-gray-300" data-icon="solar:alt-arrow-right-linear"></span>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-gray-100 flex justify-between items-center active:bg-gray-50">
+              <span class="text-sm text-gray-700">反馈意见</span>
+              <span class="iconify text-gray-300" data-icon="solar:alt-arrow-right-linear"></span>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <div class="flex justify-between items-center mb-4">
+              <h5 class="font-bold text-gray-800">积分兑换</h5>
+              <span class="text-xs text-gray-400">更多</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="space-y-2">
+                <div class="aspect-square bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
+                  <img src="https://img0.baidu.com/it/u=2565374026,300214272&fm=253&app=138&f=JPEG?w=800&h=1006" class="w-full h-full object-cover">
+                </div>
+                <p class="text-[10px] text-gray-500 text-center">古法足浴包</p>
+                <p class="text-[10px] text-red-500 font-bold text-center">100积分</p>
+              </div>
+              <div class="space-y-2">
+                <div class="aspect-square bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
+                  <img src="https://img.yzcdn.cn/upload_files/2022/07/28/FnQKY2Uoq7HL98KVPhOacfdsuQsb.jpg?imageView2/2/w/750/h/0/q/75/format/jpg" class="w-full h-full object-cover">
+                </div>
+                <p class="text-[10px] text-gray-500 text-center">艾灸条礼盒</p>
+                <p class="text-[10px] text-red-500 font-bold text-center">200积分</p>
+              </div>
+              <div class="space-y-2">
+                <div class="aspect-square bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
+                  <img src="https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=100" class="w-full h-full object-cover">
+                </div>
+                <p class="text-[10px] text-gray-500 text-center">养生茶壶</p>
+                <p class="text-[10px] text-red-500 font-bold text-center">300积分</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+    };
+
+    function switchPage(pageKey) {
+      const container = document.getElementById('main-container');
+      const title = document.getElementById('page-title');
+      const headerIcon = document.getElementById('header-icon');
+      
+      container.innerHTML = pages[pageKey];
+      
+      const titles = { home: '首页', community: '养生社区', record: '养生记录', mall: '养生商城', me: '个人中心' };
+      title.innerText = titles[pageKey];
+      
+      if(pageKey === 'me') {
+        headerIcon.setAttribute('data-icon', 'solar:settings-linear');
+      } else if(pageKey === 'home') {
+        headerIcon.setAttribute('data-icon', 'solar:notification-lines-linear');
+      } else {
+        headerIcon.setAttribute('data-icon', 'solar:share-linear');
+      }
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if(btn.dataset.page === pageKey) {
+          btn.classList.add('nav-active');
+        } else {
+          btn.classList.remove('nav-active');
+        }
+      });
+      container.scrollTop = 0;
+    }
+
+    // 初始加载首页
+    switchPage('home');
+
+    // 交互：皮肤状态测试
+    const skinQuestions = [
+      { q: "洗完脸如果不涂护肤品，皮肤感觉如何？", opts: ["紧绷脱皮", "依然油腻", "T区油两侧干", "轻微紧绷但很快恢复"] },
+      { q: "换季时，皮肤是否容易发红发痒？", opts: ["非常容易", "偶尔会", "从未有过", "晒后会红"] },
+      { q: "观察你的毛孔，哪种描述最契合？", opts: ["几乎看不见", "粗大伴有黑头", "只有T区粗大", "均匀分布"] }
+    ];
+    let currentQ = 0;
+    let results = [];
+
+    function startSkinTest() {
+      currentQ = 0;
+      results = [];
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = skinQuestions[currentQ];
+      document.getElementById('main-container').innerHTML = `
+        <div class="space-y-8 animate-in fade-in zoom-in-95 duration-300">
+          <div class="mt-4">
+             <div class="flex justify-between items-center mb-2">
+               <span class="text-xs text-[#9C4A1A] font-bold">肤质自测</span>
+               <span class="text-xs text-gray-400">${currentQ + 1} / ${skinQuestions.length}</span>
+             </div>
+             <div class="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+               <div class="h-full bg-[#9C4A1A] transition-all" style="width: ${(currentQ+1)/skinQuestions.length * 100}%"></div>
+             </div>
+          </div>
+          <h3 class="text-lg font-bold text-gray-800 leading-relaxed">${q.q}</h3>
+          <div class="space-y-3">
+            ${q.opts.map((opt, i) => `
+              <button onclick="nextQuestion('${opt}')" class="w-full text-left p-5 rounded-2xl border border-gray-100 bg-white hover:border-[#9C4A1A] active:bg-[#FDFCF9] transition-all text-sm text-gray-700 shadow-sm">
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function nextQuestion(ans) {
+      results.push(ans);
+      currentQ++;
+      if(currentQ < skinQuestions.length) {
+        renderQuestion();
+      } else {
+        renderResult();
+      }
+    }
+
+    function renderResult() {
+      document.getElementById('main-container').innerHTML = `
+        <div class="space-y-6 animate-in slide-in-from-right-4 duration-500">
+          <div class="text-center py-6">
+            <div class="inline-block p-4 bg-orange-50 rounded-full mb-4">
+              <span class="iconify text-5xl text-orange-400" data-icon="solar:stars-minimalistic-bold-duotone"></span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800">自测结果：中性偏干</h3>
+            <p class="text-sm text-gray-500 mt-2 italic">“肤如凝脂需细养”</p>
+          </div>
+          
+          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm space-y-4">
+            <div>
+              <h4 class="text-sm font-bold text-gray-800 mb-2 flex items-center gap-2">
+                <span class="w-1 h-3 bg-red-400 rounded-full"></span> 潜在状态
+              </h4>
+              <p class="text-xs text-gray-600 leading-loose">换季易缺水，角质层偏薄。内由于脾胃运化不足，气血难以荣润面部。</p>
+            </div>
+            <div class="pt-2">
+              <h4 class="text-sm font-bold text-gray-800 mb-2 flex items-center gap-2">
+                <span class="w-1 h-3 bg-green-400 rounded-full"></span> 养生方案
+              </h4>
+              <ul class="text-xs text-gray-600 space-y-3">
+                <li class="flex items-start gap-2">
+                  <span class="mt-1.5 w-1 h-1 bg-gray-400 rounded-full shrink-0"></span>
+                  <div class="flex-1 leading-relaxed">
+                    <span class="text-[#5F8D4E] font-bold mr-1">食疗:</span>建议多食银耳、玉竹、百合等滋阴润燥之品。
+                  </div>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="mt-1.5 w-1 h-1 bg-gray-400 rounded-full shrink-0"></span>
+                  <div class="flex-1 leading-relaxed">
+                    <span class="text-[#5F8D4E] font-bold mr-1">穴位:</span>每日按揉<span class="underline decoration-dotted">太溪穴</span>，引水润颜。
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <button onclick="switchPage('home')" class="w-full bg-[#9C4A1A] text-white py-4 rounded-2xl font-bold shadow-lg shadow-[#9C4A1A]/20 active:scale-95 transition-transform">
+            返回首页
+          </button>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
